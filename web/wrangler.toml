@@ -1,0 +1,8 @@
+name = "udi-query-system"
+compatibility_date = "2024-04-01"
+pages_build_output_dir = ".next"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "udi_db"
+database_id = "9ec4cc48-4452-49bf-873d-4222b5cf4bb9"
