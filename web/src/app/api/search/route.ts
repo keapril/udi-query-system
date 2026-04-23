@@ -23,16 +23,22 @@ export async function GET(req: NextRequest) {
 
     const db = drizzle(dbBinding);
 
+    // 處理 UDI 補零邏輯 (GS1 標準 14 碼)
+    const paddedQuery = query.length < 14 && /^\d+$/.test(query) 
+      ? query.padStart(14, '0') 
+      : query;
+
     // 執行搜尋
     const results = await db
       .select()
       .from(udiData)
       .where(
         or(
-          like(udiData.productNameCN, `%${query}%`),
-          like(udiData.model, `%${query}%`),
-          like(udiData.spec, `%${query}%`),
-          eq(udiData.udiDI, query)
+          eq(udiData.basicDI, query),          // 精確比對原始輸入
+          eq(udiData.basicDI, paddedQuery),    // 精確比對補零後的 14 碼
+          like(udiData.productNameCN, `%${query}%`), // 模糊比對中文品名
+          eq(udiData.specialMaterialCode, query),    // 精確比對特材代碼
+          like(udiData.licenseNo, `%${query}%`)      // 模糊比對許可證字號
         )
       )
       .limit(50);
@@ -40,6 +46,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(results);
   } catch (error: any) {
     console.error('Search API Error:', error.message);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: '搜尋發生錯誤，請稍後再試' }, { status: 500 });
   }
 }

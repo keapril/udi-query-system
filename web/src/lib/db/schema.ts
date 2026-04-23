@@ -3,15 +3,11 @@ import { sql } from 'drizzle-orm';
 
 export const udiData = sqliteTable('udi_data', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  licenseNo: text('license_no').notNull(),
-  productNameCN: text('product_name_cn'),
-  productNameEN: text('product_name_en'),
-  model: text('model'),
-  spec: text('spec'),
-  udiDI: text('udi_di').notNull(),
-  brandName: text('brand_name'),
-  manufacturer: text('manufacturer'),
-  updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
+  basicDI: text('basic_di').notNull(),          // 00389701018806
+  productNameCN: text('product_name_cn'),       // 產品中文品名
+  specialMaterialCode: text('special_material_code'), // 特材代碼
+  licenseNo: text('license_no'),                // 許可證字號
+  createdAt: text('created_at').default(sql`(datetime('now', 'localtime'))`),
 });
 
 export type UdiData = typeof udiData.$inferSelect;

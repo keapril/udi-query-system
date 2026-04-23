@@ -85,8 +85,8 @@ export default function UdiSearchPage() {
             </div>
             <input
               type="text"
-              className="m3-input-filled pl-12 pr-12 h-14 text-lg shadow-sm group-hover:shadow-md"
-              placeholder="搜尋品名、型號或規格..."
+              className="m3-input-filled pl-14 pr-12 h-14 text-lg shadow-sm group-hover:shadow-md"
+              placeholder="搜尋條碼、品名或許可證號..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -133,35 +133,28 @@ export default function UdiSearchPage() {
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
                       <h3 className="font-bold text-xl text-[var(--md-sys-color-on-surface)] line-clamp-2 leading-snug">
-                        {item.product_name_cn || item.product_name_en}
+                        {item.productNameCN || '未知品名'}
                       </h3>
-                      <p className="text-xs text-[var(--md-sys-color-primary)] font-bold bg-[var(--md-sys-color-secondary-container)] px-3 py-1 rounded-full inline-block mt-2">
-                        {item.license_no}
-                      </p>
-                    </div>
-                    <button className="m-1 p-2 rounded-full hover:bg-[var(--md-sys-color-primary)]/10 text-[var(--md-sys-color-primary)] transition-colors">
-                      <ArrowRight size={24} />
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-6 mt-5">
-                    <div className="space-y-1">
-                      <span className="block text-[var(--md-sys-color-on-surface-variant)] text-[10px] uppercase font-black tracking-tighter">型號</span>
-                      <span className="text-base font-semibold">{item.model || '無'}</span>
-                    </div>
-                    <div className="space-y-1">
-                      <span className="block text-[var(--md-sys-color-on-surface-variant)] text-[10px] uppercase font-black tracking-tighter">規格</span>
-                      <span className="text-base font-semibold line-clamp-1">{item.spec || '無'}</span>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <p className="text-[10px] text-[var(--md-sys-color-primary)] font-bold bg-[var(--md-sys-color-primary-container)] px-3 py-1 rounded-full uppercase">
+                          {item.licenseNo || '無許可證號'}
+                        </p>
+                        {item.specialMaterialCode && (
+                          <p className="text-[10px] text-[var(--md-sys-color-tertiary)] font-bold bg-[var(--md-sys-color-tertiary-container)] px-3 py-1 rounded-full uppercase">
+                            特材碼: {item.specialMaterialCode}
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
 
                   <div className="mt-6 pt-5 border-t border-[var(--md-sys-color-outline)]/10 flex items-center justify-between">
                     <div>
-                      <span className="block text-[var(--md-sys-color-on-surface-variant)] text-[10px] uppercase font-black tracking-tighter">UDI 碼 (DI)</span>
-                      <code className="text-sm font-mono font-bold text-[var(--md-sys-color-primary)] tracking-wide">{item.udi_di}</code>
+                      <span className="block text-[var(--md-sys-color-on-surface-variant)] text-[10px] uppercase font-black tracking-tighter">UDI 公開識別碼 (DI)</span>
+                      <code className="text-base font-mono font-bold text-[var(--md-sys-color-primary)] tracking-wide">{item.basicDI}</code>
                     </div>
-                    <div className="p-2 bg-[var(--md-sys-color-surface-container-low)] rounded-full">
-                      <Info size={16} className="text-[var(--md-sys-color-primary)]" />
+                    <div className="p-2 bg-[var(--md-sys-color-surface-container-low)] rounded-full group-hover:bg-[var(--md-sys-color-primary)]/10 transition-colors">
+                      <ArrowRight size={20} className="text-[var(--md-sys-color-primary)]" />
                     </div>
                   </div>
                 </motion.div>
@@ -170,12 +163,25 @@ export default function UdiSearchPage() {
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="py-24 text-center"
+                className="py-16 text-center"
               >
-                <div className="inline-flex p-6 bg-[var(--md-sys-color-surface-container)] rounded-full mb-4">
-                  <Search size={32} className="text-[var(--md-sys-color-on-surface-variant)] opacity-20" />
+                <div className="inline-flex p-6 bg-[var(--md-sys-color-surface-container)] rounded-full mb-6">
+                  <Search size={40} className="text-[var(--md-sys-color-on-surface-variant)] opacity-20" />
                 </div>
-                <p className="text-[var(--md-sys-color-on-surface-variant)] font-medium text-lg">找不到符合條件的產品</p>
+                <h3 className="text-[var(--md-sys-color-on-surface)] font-bold text-xl mb-2">本地資料庫查無結果</h3>
+                <p className="text-[var(--md-sys-color-on-surface-variant)] mb-8 max-w-xs mx-auto text-sm">
+                  這可能是尚未匯入的新產品，您可以前往食藥署 UDI 官網嘗試即時查詢。
+                </p>
+                
+                <a 
+                  href={`https://tudid.fda.gov.tw/tudid/TUDID0010_list.jsp?queryData=${encodeURIComponent(searchQuery)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="m3-button-pill m3-button-primary inline-flex items-center gap-2 px-8"
+                >
+                  <span>前往官方 TUDID 查詢</span>
+                  <ArrowRight size={18} />
+                </a>
               </motion.div>
             )}
           </AnimatePresence>
