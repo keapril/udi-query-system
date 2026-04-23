@@ -85,7 +85,7 @@ export default function UdiSearchPage() {
             </div>
             <input
               type="text"
-              className="m3-input-filled pl-14 pr-12 h-14 text-lg shadow-sm group-hover:shadow-md"
+              className="m3-input-filled pl-16 pr-12 h-14 text-lg shadow-sm group-hover:shadow-md"
               placeholder="搜尋條碼、品名或許可證號..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
