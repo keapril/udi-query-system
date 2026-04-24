@@ -86,7 +86,7 @@ export default function UdiSearchPage() {
             <input
               type="text"
               className="m3-input-filled pl-16 pr-12 h-14 text-lg shadow-sm group-hover:shadow-md"
-              placeholder="搜尋條碼、品名或許可證號..."
+              placeholder="搜尋條碼、品名、型號或許可證號..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -139,6 +139,11 @@ export default function UdiSearchPage() {
                         <p className="text-[10px] text-[var(--md-sys-color-primary)] font-bold bg-[var(--md-sys-color-primary-container)] px-3 py-1 rounded-full uppercase">
                           {item.licenseNo || '無許可證號'}
                         </p>
+                        {item.model && (
+                          <p className="text-[10px] text-[var(--md-sys-color-secondary)] font-bold bg-[var(--md-sys-color-secondary-container)] px-3 py-1 rounded-full uppercase">
+                            型號: {item.model}
+                          </p>
+                        )}
                         {item.specialMaterialCode && (
                           <p className="text-[10px] text-[var(--md-sys-color-tertiary)] font-bold bg-[var(--md-sys-color-tertiary-container)] px-3 py-1 rounded-full uppercase">
                             特材碼: {item.specialMaterialCode}
