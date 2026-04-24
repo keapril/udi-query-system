@@ -42,8 +42,9 @@ export async function GET(req: NextRequest) {
       .from(udiData)
       .where(
         or(
-          eq(udiData.basicDI, cleanQuery),      // 精確比對清理後的輸入
+          eq(udiData.basicDI, cleanQuery),      // 精確比對原始輸入
           eq(udiData.basicDI, paddedQuery),    // 精確比對補零後的 14 碼
+          like(udiData.basicDI, `%${cleanQuery}%`),    // 模糊比對 DI 碼（關鍵增加！）
           like(udiData.productNameCN, `%${cleanQuery}%`), // 模糊比對中文品名
           eq(udiData.specialMaterialCode, cleanQuery),    // 精確比對特材代碼
           like(udiData.licenseNo, `%${cleanQuery}%`)      // 模糊比對許可證字號
