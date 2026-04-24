@@ -36,6 +36,10 @@ export async function GET(req: NextRequest) {
       ? cleanQuery.padStart(14, '0') 
       : cleanQuery;
 
+    // ── 產品名稱模糊強化 ──
+    // 將輸入字串逐字拆開並加入 %，讓 "泰爾茂止血器" 能搜到 "泰爾茂 止血器"
+    const fuzzyName = `%${cleanQuery.split('').join('%')}%`;
+
     // 執行搜尋
     const results = await db
       .select()
@@ -44,8 +48,10 @@ export async function GET(req: NextRequest) {
         or(
           eq(udiData.basicDI, cleanQuery),      // 精確比對原始輸入
           eq(udiData.basicDI, paddedQuery),    // 精確比對補零後的 14 碼
-          like(udiData.basicDI, `%${cleanQuery}%`),    // 模糊比對 DI 碼（關鍵增加！）
-          like(udiData.productNameCN, `%${cleanQuery}%`), // 模糊比對中文品名
+          like(udiData.basicDI, `%${cleanQuery}%`),    // 模糊比對 DI 碼
+          like(udiData.productNameCN, fuzzyName),      // 超強模糊比對 (忽略空格)
+          eq(udiData.model, cleanQuery),                // 精確比對型號
+          like(udiData.model, `%${cleanQuery}%`),       // 模糊比對型號
           eq(udiData.specialMaterialCode, cleanQuery),    // 精確比對特材代碼
           like(udiData.licenseNo, `%${cleanQuery}%`)      // 模糊比對許可證字號
         )
