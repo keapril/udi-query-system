@@ -113,6 +113,7 @@ body {
   border-top-right-radius: var(--radius-xs);
   border-bottom: 2px solid var(--md-sys-color-outline);
   padding: 12px 16px;
+  padding-left: 64px !important; /* 強制留出空間給搜尋圖表 */
   width: 100%;
   transition: all 0.2s var(--md-easing-standard);
 }

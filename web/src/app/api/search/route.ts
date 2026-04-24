@@ -23,10 +23,18 @@ export async function GET(req: NextRequest) {
 
     const db = drizzle(dbBinding);
 
+    // ── 神秘力量驅散邏輯：清理搜尋字串 ──
+    // 1. 去除首尾空格
+    // 2. 如果是純數字，去除中間可能出現的奇怪字元
+    let cleanQuery = query.trim();
+    if (/^\d[\d\s-]*\d$/.test(cleanQuery)) {
+        cleanQuery = cleanQuery.replace(/[\s-]/g, '');
+    }
+
     // 處理 UDI 補零邏輯 (GS1 標準 14 碼)
-    const paddedQuery = query.length < 14 && /^\d+$/.test(query) 
-      ? query.padStart(14, '0') 
-      : query;
+    const paddedQuery = cleanQuery.length < 14 && /^\d+$/.test(cleanQuery) 
+      ? cleanQuery.padStart(14, '0') 
+      : cleanQuery;
 
     // 執行搜尋
     const results = await db
@@ -34,11 +42,11 @@ export async function GET(req: NextRequest) {
       .from(udiData)
       .where(
         or(
-          eq(udiData.basicDI, query),          // 精確比對原始輸入
+          eq(udiData.basicDI, cleanQuery),      // 精確比對清理後的輸入
           eq(udiData.basicDI, paddedQuery),    // 精確比對補零後的 14 碼
-          like(udiData.productNameCN, `%${query}%`), // 模糊比對中文品名
-          eq(udiData.specialMaterialCode, query),    // 精確比對特材代碼
-          like(udiData.licenseNo, `%${query}%`)      // 模糊比對許可證字號
+          like(udiData.productNameCN, `%${cleanQuery}%`), // 模糊比對中文品名
+          eq(udiData.specialMaterialCode, cleanQuery),    // 精確比對特材代碼
+          like(udiData.licenseNo, `%${cleanQuery}%`)      // 模糊比對許可證字號
         )
       )
       .limit(50);
