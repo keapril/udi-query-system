@@ -132,8 +132,17 @@ export default function UdiSearchPage() {
                   onClick={() => {
                     // 自動複製 DI 碼供備用
                     navigator.clipboard.writeText(item.basicDI);
-                    // 切換至使用者建議且可開啟的許可證查詢系統
-                    window.open(`https://lmspiq.fda.gov.tw/web/MDPIQ/license-search`, '_blank');
+                    
+                    // 嘗試從許可證號中提取純數字 (例如從 "衛署醫器輸字第009586號" 提取 "009586")
+                    const match = item.licenseNo?.match(/\d+/);
+                    const licNum = match ? match[0] : '';
+                    
+                    // 如果有數字，直接跳轉到結果清單頁，否則跳轉到搜尋頁
+                    const targetUrl = licNum 
+                      ? `https://lmspiq.fda.gov.tw/web/MDPIQ/license-list?licenseNo=${licNum}`
+                      : `https://lmspiq.fda.gov.tw/web/MDPIQ/license-search`;
+
+                    window.open(targetUrl, '_blank');
                   }}
                 >
                   <div className="flex justify-between items-start mb-4">
