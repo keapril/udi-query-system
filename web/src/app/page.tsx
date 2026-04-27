@@ -128,7 +128,8 @@ export default function UdiSearchPage() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05, type: 'spring', stiffness: 100 }}
-                  className="m3-card group cursor-pointer"
+                  className="m3-card group cursor-pointer active:scale-[0.98] transition-all"
+                  onClick={() => window.open(`https://tudid.fda.gov.tw/TUDID/Search/ExternalSearch?searchType=1&searchValue=${item.basicDI}`, '_blank')}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
