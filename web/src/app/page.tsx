@@ -130,10 +130,10 @@ export default function UdiSearchPage() {
                   transition={{ delay: index * 0.05, type: 'spring', stiffness: 100 }}
                   className="m3-card group cursor-pointer active:scale-[0.98] transition-all"
                   onClick={() => {
-                    // 自動複製 DI 碼到剪貼簿
+                    // 自動複製 DI 碼供備用
                     navigator.clipboard.writeText(item.basicDI);
-                    // 切換至食藥署更穩定的 TMS 網域路徑
-                    window.open(`https://tms.fda.gov.tw/TUDID/Search/UdiDetail?udi=${item.basicDI}`, '_blank');
+                    // 切換至使用者建議且可開啟的許可證查詢系統
+                    window.open(`https://lmspiq.fda.gov.tw/web/MDPIQ/license-search`, '_blank');
                   }}
                 >
                   <div className="flex justify-between items-start mb-4">
