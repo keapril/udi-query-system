@@ -11,6 +11,7 @@ export default function UdiSearchPage() {
   const [isScanning, setIsScanning] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // 搜尋連動邏輯
   useEffect(() => {
@@ -46,6 +47,14 @@ export default function UdiSearchPage() {
   const handleScan = (text: string) => {
     setSearchQuery(text);
     setIsScanning(false);
+  };
+
+  // 顯示溫馨提示
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 4000);
   };
 
   return (
@@ -135,7 +144,7 @@ export default function UdiSearchPage() {
                     const licNum = match ? match[0] : '';
                     if (licNum) {
                       navigator.clipboard.writeText(licNum);
-                      alert(`許可證號【${licNum}】已複製！\n請直接在搜尋框「貼上」即可查詢。`);
+                      showToast(`許可證號【${licNum}】已複製！\n您可以直接在新分頁的搜尋框「貼上」查詢`);
                     }
                     
                     // 切換至使用者建議且可開啟的許可證查詢系統首頁
@@ -217,6 +226,20 @@ export default function UdiSearchPage() {
         {/* Bottom Spacing */}
         <div className="h-24" />
       </div>
+
+      {/* Floating Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 30, scale: 0.95 }}
+            className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 bg-[var(--md-sys-color-inverse-surface)] text-[var(--md-sys-color-inverse-on-surface)] px-6 py-4 rounded-xl shadow-xl border border-[var(--md-sys-color-outline-variant)]/20 text-sm font-medium w-[90%] max-w-sm whitespace-pre-wrap text-center"
+          >
+            {toastMessage}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Scanner Dialog */}
       <ScannerDialog 
