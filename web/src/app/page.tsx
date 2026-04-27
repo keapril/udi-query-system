@@ -129,7 +129,12 @@ export default function UdiSearchPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05, type: 'spring', stiffness: 100 }}
                   className="m3-card group cursor-pointer active:scale-[0.98] transition-all"
-                  onClick={() => window.open(`https://tudid.fda.gov.tw/TUDID/Search/ExternalSearch?searchType=1&searchValue=${item.basicDI}`, '_blank')}
+                  onClick={() => {
+                    // 自動複製 DI 碼到剪貼簿，萬一跳轉失敗可以手動貼上
+                    navigator.clipboard.writeText(item.basicDI);
+                    // 改用穩定搜尋入口進行跳轉
+                    window.open(`https://tudid.fda.gov.tw/TUDID/Search/UdiDetail?udi=${item.basicDI}`, '_blank');
+                  }}
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
